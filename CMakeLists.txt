@@ -21,6 +21,8 @@ set(PROJECT_SOURCES
         citypanel.h
         leftpanel.cpp
         leftpanel.h
+        rightpanel.cpp
+        rightpanel.h
         resources.qrc
 )
 

@@ -31,7 +31,7 @@ private:
 
     void fetchCityWeatherData(const QString city);
     void fetchAllCityWeatherData();
-    void addCityPanel(const QString &city, const QVariant &temperature);
+    void addCityPanel(const QString& city, const QVariant &temperature);
 };
 
 #endif // LEFTPANEL_H

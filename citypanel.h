@@ -12,8 +12,8 @@ public:
     explicit CityPanel(const QString &cityName, double temperature, QWidget *parent = nullptr);
 
 private:
-    QLabel *cityLabel;
-    QLabel *tempLabel;
+    QLabel* cityLabel;
+    QLabel* tempLabel;
 };
 
 #endif // CITYPANEL_H

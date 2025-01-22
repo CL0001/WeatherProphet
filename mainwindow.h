@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "leftpanel.h"  // Include your LeftPanel class header
+#include "leftpanel.h"
+#include "rightpanel.h"
 
 class MainWindow : public QMainWindow
 {
@@ -13,7 +14,8 @@ public:
     ~MainWindow();
 
 private:
-    LeftPanel *leftPanel;  // Declare LeftPanel pointer
+    LeftPanel* leftPanel;
+    RightPanel* rightPanel;
 };
 
 #endif // MAINWINDOW_H

@@ -1,18 +1,36 @@
 #include "mainwindow.h"
 
-#include <QWidget>
-#include <QVBoxLayout>  // or other layout types
+#include <QSplitter>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    QWidget *centralWidget = new QWidget(this);  // Create a new widget for central layout
-    QVBoxLayout *layout = new QVBoxLayout(centralWidget);  // Create a layout for central widget
-    leftPanel = new LeftPanel(centralWidget);  // Create LeftPanel inside the layout
-    layout->addWidget(leftPanel);  // Add LeftPanel to the layout
+    QPalette palette;
+    palette.setColor(QPalette::Window, QColor(69, 69, 69));
+    palette.setColor(QPalette::WindowText, QColor(255, 255, 255));
+    palette.setColor(QPalette::Base, QColor(69, 69, 69));
+    palette.setColor(QPalette::Text, QColor(255, 255, 255));
+    palette.setColor(QPalette::Button, QColor(69, 69, 69));
+    palette.setColor(QPalette::ButtonText, QColor(255, 255, 255));
 
-    setCentralWidget(centralWidget);  // Set the central widget with the layout
+    setPalette(palette);
+
+    QSplitter* splitter = new QSplitter(this);
+    splitter->setStyleSheet("background: rgb(69, 69, 69);");
+
+    leftPanel = new LeftPanel(splitter);
+    rightPanel = new RightPanel(splitter);
+
+    splitter->addWidget(leftPanel);
+    splitter->addWidget(rightPanel);
+
+    splitter->setStretchFactor(0, 1);
+    splitter->setStretchFactor(1, 2);
+
+    setCentralWidget(splitter);
+
+    resize(1000, 600);
+    setMinimumSize(600, 400);
 }
-
 
 MainWindow::~MainWindow() {}
