@@ -1,18 +1,19 @@
 #include "leftpanel.h"
+#include "citypanel.h"
 
 #include <QAction>
 #include <QIcon>
 #include <QPixmap>
+#include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QDebug>
-
-#include "citypanel.h"
+#include <QSizePolicy>
 
 LeftPanel::LeftPanel(QWidget *parent)
     : QWidget{parent}
 {
-    // Search bar initialization and stylizization
+    // Search bar initialization
     searchBar = new QLineEdit(this);
     QAction* searchAction = new QAction(QIcon(QPixmap(":/assets/icons/magnifying-glass.png")), "search", this);
     searchBar->addAction(searchAction, QLineEdit::TrailingPosition);
@@ -27,13 +28,14 @@ LeftPanel::LeftPanel(QWidget *parent)
         "}"
     );
 
-    // Scroll area initialization and stylizization
+    // Scroll area initialization
     cityPanelList = new QScrollArea(this);
 
     auto scrollContainer = new QWidget(this);
     scrollLayout = new QVBoxLayout(scrollContainer);
     scrollContainer->setLayout(scrollLayout);
 
+    scrollContainer->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
     cityPanelList->setWidget(scrollContainer);
     cityPanelList->setWidgetResizable(true);
     cityPanelList->setStyleSheet(
@@ -124,6 +126,28 @@ void LeftPanel::fetchAllCityWeatherData()
 void LeftPanel::addCityPanel(const QString &city, const QVariant &temperature)
 {
     CityPanel* cityPanel = new CityPanel(city, temperature.toDouble(), this);
+
+    connect(cityPanel, &CityPanel::removeRequested, this, [=](const QString& cityToRemove) {
+        removeCityPanel(cityToRemove);
+    });
+
     scrollLayout->addWidget(cityPanel);
     scrollLayout->setAlignment(Qt::AlignTop);
+}
+
+void LeftPanel::removeCityPanel(const QString& city)
+{
+    for (int i = 0; i < scrollLayout->count(); i++)
+    {
+        QWidget* widget = scrollLayout->itemAt(i)->widget();
+        CityPanel* cityPanel = qobject_cast<CityPanel*>(widget);
+
+        if (cityPanel && cityPanel->getCityName() == city)
+        {
+            scrollLayout->removeWidget(cityPanel);
+            cityPanel->deleteLater();
+            cityWeatherData.remove(city);
+            break;
+        }
+    }
 }

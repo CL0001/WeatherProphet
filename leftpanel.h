@@ -6,7 +6,6 @@
 #include <QString>
 #include <QVariant>
 #include <QNetworkAccessManager>
-#include <QNetworkReply>
 #include <QLineEdit>
 #include <QScrollArea>
 #include <QVBoxLayout>
@@ -32,6 +31,7 @@ private:
     void fetchCityWeatherData(const QString city);
     void fetchAllCityWeatherData();
     void addCityPanel(const QString& city, const QVariant &temperature);
+    void removeCityPanel(const QString& city);
 };
 
 #endif // LEFTPANEL_H

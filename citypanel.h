@@ -11,9 +11,18 @@ class CityPanel : public QWidget
 public:
     explicit CityPanel(const QString &cityName, double temperature, QWidget *parent = nullptr);
 
+    QString getCityName();
+
+signals:
+    void removeRequested(const QString &cityName);
+
+protected:
+    bool eventFilter(QObject* obj, QEvent* event) override;
+
 private:
-    QLabel* cityLabel;
-    QLabel* tempLabel;
+    QLabel* dataLabel;
+    QLabel* removeLabel;
+    QString cityName;
 };
 
 #endif // CITYPANEL_H
