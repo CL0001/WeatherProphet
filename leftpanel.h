@@ -17,9 +17,12 @@ public:
     explicit LeftPanel(QWidget *parent = nullptr);
 
 signals:
+    void citySelected(const QMap<QString, QVariant>);
 
 public slots:
     void onSearchTriggered();
+    void removeCityPanel(const QString& city);
+    void selectCityPanel(const QString& city);
 
 private:
     QMap<QString, QMap<QString, QVariant>> cityWeatherData;
@@ -31,8 +34,6 @@ private:
     void fetchCityWeatherData(const QString city);
     void fetchAllCityWeatherData();
     void addCityPanel(const QString& city, const QVariant &temperature);
-    void removeCityPanel(const QString& city);
-    void selectCityPanel(const QString& city);
 };
 
 #endif // LEFTPANEL_H

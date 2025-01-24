@@ -5,21 +5,13 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    QPalette palette;
-    palette.setColor(QPalette::Window, QColor(69, 69, 69));
-    palette.setColor(QPalette::WindowText, QColor(255, 255, 255));
-    palette.setColor(QPalette::Base, QColor(69, 69, 69));
-    palette.setColor(QPalette::Text, QColor(255, 255, 255));
-    palette.setColor(QPalette::Button, QColor(69, 69, 69));
-    palette.setColor(QPalette::ButtonText, QColor(255, 255, 255));
-
-    setPalette(palette);
-
     QSplitter* splitter = new QSplitter(this);
     splitter->setStyleSheet("background: rgb(69, 69, 69);");
 
     leftPanel = new LeftPanel(splitter);
     rightPanel = new RightPanel(splitter);
+
+    connect(leftPanel, &LeftPanel::citySelected, rightPanel, &RightPanel::loadSelectedCityData);
 
     splitter->addWidget(leftPanel);
     splitter->addWidget(rightPanel);

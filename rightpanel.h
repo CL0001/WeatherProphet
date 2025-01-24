@@ -11,11 +11,17 @@ class RightPanel : public QWidget
 public:
     explicit RightPanel(QWidget *parent = nullptr);
     void displayDefaultView();
+    void displayCityView();
+
+public slots:
+    void loadSelectedCityData(const QMap<QString, QVariant> selectedCityData);
 
 private:
+    // old and working
     QFrame* contentBorder;
     QLabel* headerLabel;
     QVBoxLayout* layout;
+    QMap<QString, QVariant> currentCityData;
 };
 
 #endif // RIGHTPANEL_H

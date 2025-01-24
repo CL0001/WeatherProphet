@@ -110,13 +110,11 @@ bool CityPanel::eventFilter(QObject* obj, QEvent* event)
 {
     if (obj == removeLabel && event->type() == QEvent::MouseButtonRelease)
     {
-        qDebug() << "remove button pressed";
         emit removeRequest(cityName);
         return true;
     }
     if (obj == dataLabel && event->type() == QEvent::MouseButtonRelease)
     {
-        qDebug() << "city label pressed";
         emit selectRequest(cityName);
         return true;
     }

@@ -73,6 +73,50 @@ void LeftPanel::onSearchTriggered()
     searchBar->clear();
 }
 
+void LeftPanel::removeCityPanel(const QString& city)
+{
+    for (int i = 0; i < scrollLayout->count(); i++)
+    {
+        QWidget* widget = scrollLayout->itemAt(i)->widget();
+        CityPanel* cityPanel = qobject_cast<CityPanel*>(widget);
+
+        if (cityPanel && cityPanel->getCityName() == city)
+        {
+            scrollLayout->removeWidget(cityPanel);
+            cityPanel->deleteLater();
+            cityWeatherData.remove(city);
+            break;
+        }
+    }
+}
+
+void LeftPanel::selectCityPanel(const QString &city)
+{
+    for (int i = 0; i < scrollLayout->count(); i++)
+    {
+        QWidget* widget = scrollLayout->itemAt(i)->widget();
+        CityPanel* cityPanel = qobject_cast<CityPanel*>(widget);
+
+        if (cityPanel && cityPanel->getCityName() == city)
+        {
+            cityPanel->selectPanel();
+
+            for (int j = 0; j < scrollLayout->count(); j++)
+            {
+                QWidget* otherWidget = scrollLayout->itemAt(j)->widget();
+                CityPanel* otherCityPanel = qobject_cast<CityPanel*>(otherWidget);
+
+                if (otherCityPanel && otherCityPanel != cityPanel)
+                {
+                    otherCityPanel->unselectPanel();
+                }
+            }
+            emit citySelected(cityWeatherData[city]);
+            break;
+        }
+    }
+}
+
 void LeftPanel::fetchCityWeatherData(const QString city)
 {
     QUrl apiUrl(QString("http://localhost:8000/city/%1").arg(city));
@@ -127,56 +171,9 @@ void LeftPanel::addCityPanel(const QString &city, const QVariant &temperature)
 {
     CityPanel* cityPanel = new CityPanel(city, temperature.toDouble(), this);
 
-    connect(cityPanel, &CityPanel::removeRequest, this, [=](const QString& cityToRemove) {
-        removeCityPanel(cityToRemove);
-    });
-    connect(cityPanel, &CityPanel::selectRequest, this, [=](const QString& cityToSelect) {
-        selectCityPanel(cityToSelect);
-    });
+    connect(cityPanel, &CityPanel::removeRequest, this, &LeftPanel::removeCityPanel);
+    connect(cityPanel, &CityPanel::selectRequest, this, &LeftPanel::selectCityPanel);
 
     scrollLayout->addWidget(cityPanel);
     scrollLayout->setAlignment(Qt::AlignTop);
-}
-
-void LeftPanel::removeCityPanel(const QString& city)
-{
-    for (int i = 0; i < scrollLayout->count(); i++)
-    {
-        QWidget* widget = scrollLayout->itemAt(i)->widget();
-        CityPanel* cityPanel = qobject_cast<CityPanel*>(widget);
-
-        if (cityPanel && cityPanel->getCityName() == city)
-        {
-            scrollLayout->removeWidget(cityPanel);
-            cityPanel->deleteLater();
-            cityWeatherData.remove(city);
-            break;
-        }
-    }
-}
-
-void LeftPanel::selectCityPanel(const QString &city)
-{
-    for (int i = 0; i < scrollLayout->count(); i++)
-    {
-        QWidget* widget = scrollLayout->itemAt(i)->widget();
-        CityPanel* cityPanel = qobject_cast<CityPanel*>(widget);
-
-        if (cityPanel && cityPanel->getCityName() == city)
-        {
-            cityPanel->selectPanel();
-
-            for (int j = 0; j < scrollLayout->count(); j++)
-            {
-                QWidget* otherWidget = scrollLayout->itemAt(j)->widget();
-                CityPanel* otherCityPanel = qobject_cast<CityPanel*>(otherWidget);
-
-                if (otherCityPanel && otherCityPanel != cityPanel)
-                {
-                    otherCityPanel->unselectPanel();
-                }
-            }
-            break;
-        }
-    }
 }

@@ -32,3 +32,15 @@ void RightPanel::displayDefaultView()
     headerLabel->setText("Weather Prophet");
     headerLabel->show();
 }
+
+void RightPanel::displayCityView()
+{
+
+}
+
+void RightPanel::loadSelectedCityData(const QMap<QString, QVariant> selectedCityData)
+{
+    currentCityData = selectedCityData;
+    qDebug() << "swapping to city data view";
+    displayCityView();
+}
