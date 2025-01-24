@@ -13,8 +13,12 @@ public:
 
     QString getCityName();
 
+    void selectPanel();
+    void unselectPanel();
+
 signals:
-    void removeRequested(const QString &cityName);
+    void removeRequest(const QString &cityName);
+    void selectRequest(const QString &cityName);
 
 protected:
     bool eventFilter(QObject* obj, QEvent* event) override;

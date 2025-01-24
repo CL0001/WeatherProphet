@@ -32,6 +32,7 @@ private:
     void fetchAllCityWeatherData();
     void addCityPanel(const QString& city, const QVariant &temperature);
     void removeCityPanel(const QString& city);
+    void selectCityPanel(const QString& city);
 };
 
 #endif // LEFTPANEL_H
