@@ -2,5 +2,14 @@
     <qresource prefix="/">
         <file>assets/icons/magnifying-glass.png</file>
         <file>assets/icons/close.png</file>
+        <file>assets/icons/drop.png</file>
+        <file>assets/icons/wind.png</file>
+        <file>assets/icons/earth.png</file>
+        <file>assets/icons/sunrise.png</file>
+        <file>assets/icons/sunset.png</file>
+        <file>assets/icons/gauge.png</file>
+        <file>assets/icons/info.png</file>
+        <file>assets/icons/temperature.png</file>
+        <file>assets/icons/height.png</file>
     </qresource>
 </RCC>

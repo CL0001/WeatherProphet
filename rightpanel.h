@@ -4,6 +4,15 @@
 #include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QMap>
+#include <QVariant>
+#include <QFrame>
+#include <QPixmap>
+#include <QDebug>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QHeaderView>
 
 class RightPanel : public QWidget
 {
@@ -14,13 +23,13 @@ public:
     void displayCityView();
 
 public slots:
-    void loadSelectedCityData(const QMap<QString, QVariant> selectedCityData);
+    void loadSelectedCityData(const QMap<QString, QVariant> &selectedCityData);
 
 private:
-    // old and working
-    QFrame* contentBorder;
-    QLabel* headerLabel;
-    QVBoxLayout* layout;
+    void clearLayout();
+    void addTableSection(QTableWidget* table, int row, const QVector<QString>& iconPaths, const QVector<QString>& texts);
+
+    QVBoxLayout* mainLayout;
     QMap<QString, QVariant> currentCityData;
 };
 

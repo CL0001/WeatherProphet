@@ -1,7 +1,7 @@
 #include "rightpanel.h"
 
 RightPanel::RightPanel(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), mainLayout(new QVBoxLayout(this))
 {
     setStyleSheet(
         "QWidget {"
@@ -11,6 +11,25 @@ RightPanel::RightPanel(QWidget *parent)
         "}"
     );
 
+    setLayout(mainLayout);
+    displayDefaultView();
+}
+
+void RightPanel::clearLayout()
+{
+    while (QLayoutItem* item = mainLayout->takeAt(0))
+    {
+        if (item->widget()) {
+            delete item->widget();
+        }
+        delete item;
+    }
+}
+
+void RightPanel::displayDefaultView()
+{
+    clearLayout();
+
     QLabel* titleLabel = new QLabel("Weather Prophet", this);
     titleLabel->setStyleSheet(
         "QLabel {"
@@ -19,28 +38,95 @@ RightPanel::RightPanel(QWidget *parent)
         "   qproperty-alignment: AlignCenter;"
         "}"
     );
-
     titleLabel->setAlignment(Qt::AlignCenter);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
-    layout->addWidget(titleLabel);
-    setLayout(layout);
-}
-
-void RightPanel::displayDefaultView()
-{
-    headerLabel->setText("Weather Prophet");
-    headerLabel->show();
+    mainLayout->addWidget(titleLabel);
 }
 
 void RightPanel::displayCityView()
 {
+    clearLayout();
 
+    QTableWidget* table = new QTableWidget(this);
+
+    table->setShowGrid(false);
+
+    table->setColumnCount(8);
+    table->setRowCount(4);
+
+    table->horizontalHeader()->setVisible(false);
+    table->verticalHeader()->setVisible(false);
+
+    table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    // Header
+    QLabel* cityName = new QLabel(currentCityData["name"].toString(), this);
+    cityName->setStyleSheet("font-size: 24px; font-weight: bold; color: white; border: none;");
+    cityName->setAlignment(Qt::AlignCenter);
+    table->setRowHeight(0, 60);
+
+    QTableWidgetItem* headerItem = new QTableWidgetItem();
+    table->setSpan(0, 0, 1, 8);
+    table->setCellWidget(0, 0, cityName);
+
+    // Location & Description
+    addTableSection(table, 1, {":/assets/icons/earth.png", ":/assets/icons/sunrise.png", ":/assets/icons/sunset.png", ":/assets/icons/info.png"},
+                    {
+                        QString("%1°N, %2°W").arg(currentCityData["lon"].toString(), currentCityData["lat"].toString()),
+                        currentCityData["sunrise"].toString(),
+                        currentCityData["sunset"].toString(),
+                        currentCityData["weather_description"].toString()
+                    });
+
+    // Main Information
+    addTableSection(table, 2, {":/assets/icons/temperature.png", ":/assets/icons/temperature.png", ":/assets/icons/temperature.png", ":/assets/icons/temperature.png"},
+                    {
+                        QString("Temperature: %1°C").arg(currentCityData["temp"].toString()),
+                        QString("Feels Like: %1°C").arg(currentCityData["feels_like"].toString()),
+                        QString("Min Temp: %1°C").arg(currentCityData["temp_min"].toString()),
+                        QString("Max Temp: %1°C").arg(currentCityData["temp_max"].toString())
+                    });
+
+    // Additional Information
+    addTableSection(table, 3, {":/assets/icons/gauge.png", ":/assets/icons/drop.png", ":/assets/icons/wind.png", ":/assets/icons/height.png"},
+                    {
+                        QString("Pressure: %1 hPa").arg(currentCityData["pressure"].toString()),
+                        QString("Humidity: %1 %").arg(currentCityData["humidity"].toString()),
+                        QString("Wind Speed: %1 m/s").arg(currentCityData["wind_speed"].toString()),
+                        QString("Sea Level: %1 m").arg(currentCityData["sea_level"].toString())
+                    });
+
+    mainLayout->addWidget(table);
 }
 
-void RightPanel::loadSelectedCityData(const QMap<QString, QVariant> selectedCityData)
+void RightPanel::addTableSection(QTableWidget* table, int row, const QVector<QString>& iconPaths, const QVector<QString>& texts)
+{
+    table->setRowHeight(row, 60);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        QLabel* iconLabel = new QLabel(table);
+        if (!iconPaths[i].isEmpty())
+        {
+            QPixmap iconPixmap(iconPaths[i]);
+            QPixmap scaledIcon = iconPixmap.scaled(QSize(48, 48), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            iconLabel->setPixmap(scaledIcon);
+            iconLabel->setStyleSheet("border: none;");
+        }
+        iconLabel->setAlignment(Qt::AlignCenter);
+        table->setCellWidget(row, i * 2, iconLabel);
+
+        QLabel* textLabel = new QLabel(texts[i], table);
+        textLabel->setStyleSheet("color: white; font-weight: bold; font-size: 14px; border: none;");
+        textLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        table->setCellWidget(row, i * 2 + 1, textLabel);
+    }
+}
+
+void RightPanel::loadSelectedCityData(const QMap<QString, QVariant> &selectedCityData)
 {
     currentCityData = selectedCityData;
-    qDebug() << "swapping to city data view";
+    qDebug() << "Swapping to city data view";
     displayCityView();
 }

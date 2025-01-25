@@ -21,8 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     setCentralWidget(splitter);
 
-    resize(1000, 600);
-    setMinimumSize(600, 400);
+    resize(2000, 900);
+    setMinimumSize(1600, 900);
 }
 
 MainWindow::~MainWindow() {}
