@@ -11,5 +11,6 @@
         <file>assets/icons/info.png</file>
         <file>assets/icons/temperature.png</file>
         <file>assets/icons/height.png</file>
+        <file>assets/files/city_names.txt</file>
     </qresource>
 </RCC>

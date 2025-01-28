@@ -9,12 +9,38 @@
 #include <QJsonObject>
 #include <QDebug>
 #include <QSizePolicy>
+#include <QCompleter>
+#include <QMessageBox>
+#include <QFile>
 
 LeftPanel::LeftPanel(QWidget *parent)
     : QWidget{parent}
 {
+    // City suggestion
+    QStringList citySuggestions;
+    QFile file(":/assets/files/city_names.txt");
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream tstream(&file);
+        while (!tstream.atEnd()) {
+            QString cityName = tstream.readLine();
+            citySuggestions.append(cityName);
+        }
+        file.close();
+    } else {
+        qWarning() << "Could not open city list file.";
+    }
+
+    QCompleter* completer = new QCompleter(citySuggestions, this);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    completer->setCompletionMode(QCompleter::PopupCompletion);
+    completer->setFilterMode(Qt::MatchContains);
+
     // Search bar initialization
     searchBar = new QLineEdit(this);
+
+    searchBar->setCompleter(completer);
+
     QAction* searchAction = new QAction(QIcon(QPixmap(":/assets/icons/magnifying-glass.png")), "search", this);
     searchBar->addAction(searchAction, QLineEdit::TrailingPosition);
 
@@ -27,6 +53,20 @@ LeftPanel::LeftPanel(QWidget *parent)
         "   padding: 10px;"
         "}"
     );
+
+    connect(searchBar, &QLineEdit::returnPressed, this, [this, completer]() {
+        if (completer->completionCount() > 0) {
+            completer->setCurrentRow(0);
+            searchBar->setText(completer->currentCompletion());
+            onSearchTriggered();
+        }
+        else
+        {
+            QMessageBox::warning(this, "Invalid Input", "Please select a valid city from the suggestions.");
+            searchBar->clear();
+        }
+
+    });
 
     // Scroll area initialization
     cityPanelList = new QScrollArea(this);
