@@ -12,6 +12,10 @@
 #include <QCompleter>
 #include <QMessageBox>
 #include <QFile>
+#include <QStandardPaths>
+#include <QDir>
+
+const QString filePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/saved_cities.txt";
 
 LeftPanel::LeftPanel(QWidget *parent)
     : QWidget{parent}
@@ -93,8 +97,16 @@ LeftPanel::LeftPanel(QWidget *parent)
     layout->addWidget(cityPanelList);
     setLayout(layout);
 
+    // Loading previous city data
+    loadCityList();
+
     // Linking signals and slots
     connect(searchAction, &QAction::triggered, this, &LeftPanel::onSearchTriggered);
+}
+
+LeftPanel::~LeftPanel()
+{
+    saveCityList();
 }
 
 void LeftPanel::onSearchTriggered()
@@ -216,4 +228,59 @@ void LeftPanel::addCityPanel(const QString &city, const QVariant &temperature)
 
     scrollLayout->addWidget(cityPanel);
     scrollLayout->setAlignment(Qt::AlignTop);
+}
+
+void LeftPanel::saveCityList()
+{
+    QDir dir = QFileInfo(filePath).absoluteDir();
+    if (!dir.exists())
+    {
+        dir.mkpath(".");
+    }
+
+    QFile file(filePath);
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qWarning() << "Could not open file for writing:" << file.errorString();
+        return;
+    }
+
+    QTextStream stream(&file);
+
+    for (const QString &city : cityWeatherData.keys())
+    {
+        stream << city << "\n";
+    }
+
+    file.close();
+    qDebug() << "City list successfully saved to" << filePath;
+}
+
+void LeftPanel::loadCityList()
+{
+    QFile file(filePath);
+    if (!file.exists())
+    {
+        qWarning() << "City list file does not exist, skipping load.";
+        return;
+    }
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qWarning() << "Could not open city list file:" << file.errorString();
+        return;
+    }
+
+    QTextStream tstream(&file);
+    while (!tstream.atEnd())
+    {
+        QString cityName = tstream.readLine().trimmed();
+        if (!cityName.isEmpty())
+        {
+            fetchCityWeatherData(cityName);
+        }
+    }
+    file.close();
+    qDebug() << "City list successfully loaded from" << filePath;
 }

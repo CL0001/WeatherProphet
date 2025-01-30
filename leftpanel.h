@@ -15,6 +15,7 @@ class LeftPanel : public QWidget
     Q_OBJECT
 public:
     explicit LeftPanel(QWidget *parent = nullptr);
+    ~LeftPanel();
 
 signals:
     void citySelected(const QMap<QString, QVariant>);
@@ -34,6 +35,8 @@ private:
     void fetchCityWeatherData(const QString city);
     void fetchAllCityWeatherData();
     void addCityPanel(const QString& city, const QVariant &temperature);
+    void saveCityList();
+    void loadCityList();
 };
 
 #endif // LEFTPANEL_H
