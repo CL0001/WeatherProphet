@@ -10,8 +10,8 @@ CityPanel::CityPanel(const QString &cityName, double temperature, QWidget *paren
     QString labelText = QString(
                             "<table width='100%' cellspacing='0' cellpadding='0'>"
                             "<tr>"
-                            "<td align='left' style='padding-left: 10px;'>%1</td>"
-                            "<td align='right' style='padding-right: 10px;'>%2°C</td>"
+                            "<td align='left' style='padding-left: 10px;'><b>%1</b></td>"
+                            "<td align='right' style='padding-right: 10px;'><b>%2°C</b></td>"
                             "</tr>"
                             "</table>"
                         ).arg(cityName).arg(temperature);

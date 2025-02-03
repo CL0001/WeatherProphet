@@ -52,7 +52,7 @@ void RightPanel::displayCityView()
     table->setShowGrid(false);
 
     table->setColumnCount(8);
-    table->setRowCount(4);
+    table->setRowCount(9);
 
     table->horizontalHeader()->setVisible(false);
     table->verticalHeader()->setVisible(false);
@@ -95,6 +95,47 @@ void RightPanel::displayCityView()
                         QString("Humidity: %1 %").arg(currentCityData["humidity"].toString()),
                         QString("Wind Speed: %1 m/s").arg(currentCityData["wind_speed"].toString()),
                         QString("Sea Level: %1 m").arg(currentCityData["sea_level"].toString())
+                    });
+
+    // Predictions for five days ahead
+    addTableSection(table, 4, {" ", ":/assets/icons/circle-1.png", " ", " "},
+                    {
+                        QString(" "),
+                        QString("%1").arg(currentCityData["day1"].toString()),
+                        QString("%1").arg(currentCityData["value1"].toString()),
+                        QString(" ")
+                    });
+
+    addTableSection(table, 5, {" ", ":/assets/icons/circle-2.png", " ", " "},
+                    {
+                        QString(" "),
+                        QString("%1").arg(currentCityData["day2"].toString()),
+                        QString("%1").arg(currentCityData["value2"].toString()),
+                        QString(" ")
+                    });
+
+    addTableSection(table, 6, {" ", ":/assets/icons/circle-3.png", " ", " "},
+                    {
+                        QString(" "),
+                        QString("%1").arg(currentCityData["day3"].toString()),
+                        QString("%1").arg(currentCityData["value3"].toString()),
+                        QString(" ")
+                    });
+
+    addTableSection(table, 7, {" ", ":/assets/icons/circle-4.png", " ", " "},
+                    {
+                        QString(" "),
+                        QString("%1").arg(currentCityData["day4"].toString()),
+                        QString("%1").arg(currentCityData["value4"].toString()),
+                        QString(" ")
+                    });
+
+    addTableSection(table, 8, {" ", ":/assets/icons/circle-5.png", " ", " "},
+                    {
+                        QString(" "),
+                        QString("%1").arg(currentCityData["day5"].toString()),
+                        QString("%1").arg(currentCityData["value5"].toString()),
+                        QString(" ")
                     });
 
     mainLayout->addWidget(table);

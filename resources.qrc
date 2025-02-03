@@ -12,5 +12,10 @@
         <file>assets/icons/temperature.png</file>
         <file>assets/icons/height.png</file>
         <file>assets/files/city_names.txt</file>
+        <file>assets/icons/circle-1.png</file>
+        <file>assets/icons/circle-2.png</file>
+        <file>assets/icons/circle-3.png</file>
+        <file>assets/icons/circle-4.png</file>
+        <file>assets/icons/circle-5.png</file>
     </qresource>
 </RCC>
