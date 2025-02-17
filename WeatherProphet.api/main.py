@@ -29,7 +29,7 @@ def root():
 @app.get('/city/{name}')
 def city_weather_data(name: str, db: Session = Depends(get_db)):
     try:
-        city_record = db.query(CityData).filter(CityData.name == name).first()
+        city_record = db.query(CityData).filter(CityData.name == name).order_by(CityData.id.desc()).first()
         today_date = datetime.datetime.now(datetime.UTC).date()
         if city_record and city_record.created_at.date() == today_date:
             return format_query(city_record)
